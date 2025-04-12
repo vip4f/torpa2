@@ -1,0 +1,56 @@
+This function runs provided Python code to obtain desired results.
+The code must conform to Python version 2 syntax.
+The code must have single top level function called "script" which takes single parameter.
+
+The function parameter is an object with the following type:
+    class PyScriptApi:
+        """This class has various methods to call external services."""
+        def localDateTime(self):
+            """The method returns current local date and time as a string, e.g. 'Tue, 3 Jun 2008 11:05:30'"""
+            // Implementation details is omitted
+            pass
+        def webSearch(self, query, start = 1, count = 10, site = ""):
+            """The methon runs web search. Parameters are:
+                   * query - search string,
+                   * start - position of the first result to return,
+                   * count - number of results to return,
+                   * site - search domain restriction, empty string means global search without restrictions.
+               Search results are list where each item is a dictionary describing search results."""
+            // Implementation details is omitted
+            pass
+
+The Python "script" function must return single value of the following types: boolean, integer, float, string, list, dictionary, or their combinations.
+The dictionary keys must be always strings, the dictionary values can be any type of the above.
+The result Python value will be converted into JSON value using corresponding JSON types: dictionary will be mapped into JSON object, list will be mapped into JSON array.
+Python string, integer, float, and boolean values will be converted into corresponding JSON types.
+
+For example, to calculate the first 10 Fibonacci numbers the Python code should look like this:
+def script(api):
+    """
+    Returns a list containing the first 10 Fibonacci numbers using Python 2 syntax.
+    """
+    result = []
+    a, b = 0, 1
+    for _ in range(10):
+        result.append(a)
+        a, b = b, a + b
+    return result
+
+For example, to obtain current local date and time the Python code should look like this:
+def script(api):
+    return api.localDateTime()
+
+For example, to get current day of the week the Python code should look like this:
+def script(api):
+    return api.localDateTime()[0:3]
+
+For example, to get current year the Python code should look like this:
+def script(api):
+    return api.localDateTime().split(' ')[3]
+
+For example, to get the first snippet about Buick cars from Wikipedia website the Python code should look like this:
+def script(api):
+    results = api.webSearch("Buick", site="wikipedia.org")
+    if len(results) < 1:
+            raise RuntimeError("No search results")
+    return results[0]["snippet"]

@@ -1,0 +1,41 @@
+<configuration>
+
+  <contextName>torpa2</contextName>
+
+  <!-- ===================================================== -->
+  <!-- Secondary Appenders -->
+  <!-- ===================================================== -->
+
+  <appender name="GcpStructuredAppender" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      <layout class="llmtest.torpa2.StructuredLogLayout" />
+    </encoder>
+    <target>System.err</target>
+  </appender>
+
+
+  <!-- ===================================================== -->
+  <!-- Primary Async Appenders -->
+  <!-- ===================================================== -->
+
+  <appender name="AsyncAppender" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>1024</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+    <neverBlock>false</neverBlock>
+    <appender-ref ref="GcpStructuredAppender"/>
+  </appender>
+
+
+  <!-- ===================================================== -->
+  <!-- Package Config -->
+  <!-- ===================================================== -->
+
+  <!-- Root Config -->
+  <root level="info">
+    <appender-ref ref="AsyncAppender"/>
+  </root>
+
+  <!-- Per-Package Config -->
+  <logger name="llmtest" level="debug"/>
+
+</configuration>
